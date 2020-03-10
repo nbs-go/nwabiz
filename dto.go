@@ -30,4 +30,11 @@ type ContactsResp struct {
 type CheckContactsResp struct {
 	Contacts []ContactsResp `json:"contacts"`
 	Meta     MetaResp       `json:"meta"`
+	Errors   *ErrorResp     `json:"errors"`
+}
+
+type ErrorResp struct {
+	Code    int64  `json:"code"`
+	Title   string `json:"title"`
+	Details string `json:"details"`
 }
