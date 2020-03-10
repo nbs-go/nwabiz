@@ -1,6 +1,7 @@
 package nwabiz
 
 import (
+	"encoding/json"
 	"os"
 	"strconv"
 	"testing"
@@ -88,6 +89,43 @@ func TestCheckContactValid(t *testing.T) {
 
 	if contact.Status != ValidStatus {
 		t.Errorf("Failed: Valid status expected. Got %s", contact.Status)
+		return
+	}
+
+	t.Log("Pass")
+}
+
+func TestSendMessageTemplateText(t *testing.T) {
+	// Get inputs
+	envKey := "NWABIZ_TEST_CASE_SEND_MESSAGE_TEMPLATE_TEXT_JSON"
+	jsonStr := os.Getenv(envKey)
+
+	// Parse json
+	var reqBody SendMessageReq
+	err := json.Unmarshal([]byte(jsonStr), &reqBody)
+	if err != nil {
+		t.Errorf("unable to parse %s. Errors: (%s)", envKey, err)
+		return
+	}
+
+	// Set template message
+	reqBody.Type = HSMObjectType
+	reqBody.HSM.Language.Policy = DeterministicLangPolicy
+
+	// Test send message
+	result, err := provider.SendMessage(reqBody)
+	if err != nil {
+		t.Errorf("unable to check send message template text. Error: (%s)", err)
+
+		if result != nil && result.Errors != nil {
+			t.Errorf("received error: %+v", result.Errors)
+		}
+
+		return
+	}
+
+	if count := len(result.Messages); count != 1 {
+		t.Errorf("Failed: Expected message 1 id. Got %d", count)
 		return
 	}
 
