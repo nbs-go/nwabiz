@@ -10,6 +10,10 @@
 
 > TODO: Complete testing guide
 
+## License
+
+MIT
+
 ## Contributors
 
 - Saggaf Arsyad <saggaf@nbs.co.id>
