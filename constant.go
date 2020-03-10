@@ -5,4 +5,8 @@ const (
 
 	InvalidStatus = "invalid"
 	ValidStatus   = "valid"
+
+	HSMObjectType = "hsm"
+
+	DeterministicLangPolicy = "deterministic"
 )
