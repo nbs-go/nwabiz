@@ -12,13 +12,13 @@ var provider *WhatsAppBiz
 func TestMain(m *testing.M) {
 	// Prepare opt
 	opt := InitOpt{
-		BaseUrl:  os.Getenv("TEST_WABIZ_BASE_URL"),
-		Username: os.Getenv("TEST_WABIZ_USERNAME"),
-		Password: os.Getenv("TEST_WABIZ_PASSWORD"),
+		BaseUrl:  os.Getenv("NWABIZ_TEST_BASE_URL"),
+		Username: os.Getenv("NWABIZ_TEST_USERNAME"),
+		Password: os.Getenv("NWABIZ_TEST_PASSWORD"),
 	}
 
 	// Get insecure ssl opt
-	insecureSSLStr := os.Getenv("TEST_WABIZ_INSECURE_SSL")
+	insecureSSLStr := os.Getenv("NWABIZ_TEST_INSECURE_SSL")
 	insecureSSL, err := strconv.ParseBool(insecureSSLStr)
 	if err != nil {
 		insecureSSL = false
@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 	opt.InsecureSSL = insecureSSL
 
 	// Set timeout
-	timeoutStr := os.Getenv("TEST_WABIZ_CLIENT_TIMEOUT")
+	timeoutStr := os.Getenv("NWABIZ_TEST_CLIENT_TIMEOUT")
 	timeout, err := strconv.ParseInt(timeoutStr, 10, 64)
 	if err != nil {
 		timeout = 10000
@@ -58,7 +58,7 @@ func TestLogin(t *testing.T) {
 
 func TestCheckContactInvalid(t *testing.T) {
 	// Get test case
-	input := os.Getenv("TEST_WABIZ_CASE_CONTACT_INVALID")
+	input := os.Getenv("NWABIZ_TEST_CASE_CONTACT_INVALID")
 
 	// Test invalid case
 	contact, err := provider.CheckContact(input)
@@ -77,7 +77,7 @@ func TestCheckContactInvalid(t *testing.T) {
 
 func TestCheckContactValid(t *testing.T) {
 	// Get test case
-	input := os.Getenv("TEST_WABIZ_CASE_CONTACT_VALID")
+	input := os.Getenv("NWABIZ_TEST_CASE_CONTACT_VALID")
 
 	// Test invalid case
 	contact, err := provider.CheckContact(input)
