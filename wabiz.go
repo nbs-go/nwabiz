@@ -197,3 +197,57 @@ func (c *WhatsAppBiz) CheckContact(msisdn string) (*ContactsResp, error) {
 
 	return &contact, nil
 }
+
+func (c *WhatsAppBiz) SendMessage(reqBody SendMessageReq) (*SendMessageResp, error) {
+	// Check if access valid
+	if !c.IsAccessValid(time.Now()) {
+		err := c.Login()
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// Create Request
+	url := c.BaseUrl + "/messages" +
+		""
+	buffer, err := json.Marshal(reqBody)
+	if err != nil {
+		return nil, NewUnhandledError(err)
+	}
+
+	req, err := http.NewRequest("POST", url, bytes.NewBuffer(buffer))
+	if err != nil {
+		return nil, NewUnhandledError(err)
+	}
+
+	req.Header.Add("Content-Type", "application/json")
+	req.Header.Add("Authorization", "Bearer "+c.AccessToken)
+
+	// Send Request
+	res, err := c.Client.Do(req)
+	if err != nil {
+		return nil, NewUnhandledError(err)
+	}
+
+	defer res.Body.Close()
+
+	// Parse body
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		return nil, NewUnhandledError(err)
+	}
+
+	// Parse response
+	var respBody SendMessageResp
+	err = json.Unmarshal(body, &respBody)
+	if err != nil {
+		return nil, NewUnhandledError(err)
+	}
+
+	// If errors is exist, return error
+	if len(respBody.Errors) > 0 {
+		return &respBody, NewUnhandledError(fmt.Errorf("received error %d responses", len(respBody.Errors)))
+	}
+
+	return &respBody, nil
+}
